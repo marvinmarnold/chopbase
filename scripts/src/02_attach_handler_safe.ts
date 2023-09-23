@@ -4,8 +4,8 @@ import { ethers } from 'ethers'
 import * as dotenv from 'dotenv'
 import Safe from '@safe-global/protocol-kit/dist/src/Safe.js'
 
-
 dotenv.config()
+
 interface Config {
   RPC_URL: string
   DEPLOYER_ADDRESS_PRIVATE_KEY: string
@@ -17,7 +17,7 @@ const config: Config = {
   RPC_URL: process.env.RPC_URL!,
   DEPLOYER_ADDRESS_PRIVATE_KEY: process.env.PROJECT_ADMIN_SK!,
   SAFE_ADDRESS: process.env.SAFE_ADDRESS!,
-  HANDLER_ADDRESS: process.env.FALLBACK_HANDLER_ADDRESS!
+  HANDLER_ADDRESS: process.env.HANDLER_ADDRESS!
 }
 console.log("Using config")
 console.log(config)
@@ -31,9 +31,9 @@ async function main() {
     ethers,
     signerOrProvider: deployerSigner
   })
-
+ 
   // Create SafeFactory instance
-  const safeSdk = await Safe.create({ethAdapter, safeAddress: config.SAFE_ADDRESS})
+  const safeSdk = await Safe.default.create({ethAdapter, safeAddress: config.SAFE_ADDRESS})
 
   const safeTransaction = await safeSdk.createEnableFallbackHandlerTx(config.HANDLER_ADDRESS)
   const txResponse = await safeSdk.executeTransaction(safeTransaction)

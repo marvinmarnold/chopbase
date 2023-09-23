@@ -21,7 +21,7 @@ const config: Config = {
   DEPLOY_SAFE: {
     OWNERS: [process.env.PROJECT_ADMIN_PK!],
     THRESHOLD: 1,
-    SALT_NONCE: '0x547654'
+    SALT_NONCE: ethers.utils.hexlify(parseInt(process.env.SAFE_NONCE!))
   }
 }
 
@@ -38,8 +38,8 @@ async function main() {
   })
 
   // Create SafeFactory instance
-//   const safeVersion = '1.4.1'
-  const safeVersion = '1.3.0'
+  const safeVersion = '1.4.1'
+  // const safeVersion = '1.3.0'
   const safeFactory = await SafeFactory.create({ ethAdapter, safeVersion })
 
   // Config of the deployed Safe

@@ -364,6 +364,54 @@
         }
       }
     },
+    "src/CreateCall.sol": {
+      "lastModificationDate": 1695495474839,
+      "contentHash": "7ae250308bc007d021704ab055c3ec97",
+      "sourceName": "src/CreateCall.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10000,
+            "details": {
+              "peephole": true,
+              "inliner": true,
+              "deduplicate": true,
+              "cse": true,
+              "yul": true
+            }
+          },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "none",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.7.0, <0.9.0",
+      "artifacts": {
+        "CreateCall": {
+          "0.8.19+commit.7dd6d404.Darwin.appleclang": "CreateCall.sol/CreateCall.json"
+        }
+      }
+    },
     "src/FallbackHandler.sol": {
       "lastModificationDate": 1695479880582,
       "contentHash": "735282e2a578d6e2cbc46fdccc2f788f",

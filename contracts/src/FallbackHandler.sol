@@ -3,6 +3,8 @@
 pragma solidity >=0.7.0 <0.9.0;
 pragma abicoder v2;
 
+/// @dev recompile1
+
 /// @dev Adapted from: https://github.com/safe-global/safe-contracts/blob/8ffae95faa815acf86ec8b50021ebe9f96abde10/contracts/test/Test4337ModuleAndHandler.sol#L28
 struct UserOperation {
     address sender;
@@ -54,9 +56,5 @@ contract FallbackHandler {
         address payable safeAddress = payable(msg.sender);
         ISafe safe = ISafe(safeAddress);
         require(safe.execTransactionFromModule(to, value, data, 0), "tx failed");
-    }
-
-    function enableMyself() public {
-        ISafe(address(this)).enableModule(MY_ADDRESS);
     }
 }

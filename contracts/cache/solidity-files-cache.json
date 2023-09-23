@@ -413,8 +413,8 @@
       }
     },
     "src/FallbackHandler.sol": {
-      "lastModificationDate": 1695479880582,
-      "contentHash": "735282e2a578d6e2cbc46fdccc2f788f",
+      "lastModificationDate": 1695504767111,
+      "contentHash": "479a60bc5544b8dbb91163b855f7ff8a",
       "sourceName": "src/FallbackHandler.sol",
       "solcConfig": {
         "settings": {

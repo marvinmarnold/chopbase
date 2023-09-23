@@ -1,7 +1,7 @@
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react"
 import { WagmiConfig } from "wagmi"
 import { arbitrum, mainnet } from "wagmi/chains"
-import { Routes, Route, BrowserRouter } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 
 import Home from "./pages/Home"
 import TeamOverview from "./pages/team/"
@@ -20,13 +20,11 @@ createWeb3Modal({ wagmiConfig, projectId, chains })
 export default function App() {
 	return (
 		<WagmiConfig config={wagmiConfig}>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/set-up" element={<SetUp />} />
-					<Route path="/team/:address" element={<TeamOverview />} />
-				</Routes>
-			</BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/set-up" element={<SetUp />} />
+				<Route path="/team/:address" element={<TeamOverview />} />
+			</Routes>
 			{/* <Home /> */}
 		</WagmiConfig>
 	)

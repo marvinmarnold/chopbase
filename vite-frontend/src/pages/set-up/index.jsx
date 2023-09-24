@@ -5,9 +5,7 @@ import { ethers } from 'ethers'
 import { useAccount } from "wagmi";
 import * as _ from "lodash"
 import { useNavigate } from "react-router-dom";
-import { useWalletClient } from 'wagmi'
-import { providers } from 'ethers'
-import * as React from 'react'
+import { useEthersSigner } from "../../hooks/useEthersSIgner";
 
 // 1.4.1 or 1.3.0
 const SAFE_VERSION = '1.4.1'
@@ -18,27 +16,6 @@ function getRandomInt(max) {
 function callback(txHash) {
 	console.log('Transaction hash:', txHash)
 }
-
-export function walletClientToSigner(walletClient) {
-	const { account, chain, transport } = walletClient
-	const network = {
-	  chainId: chain.id,
-	  name: chain.name,
-	  ensAddress: chain.contracts?.ensRegistry?.address,
-	}
-	const provider = new providers.Web3Provider(transport, network)
-	const signer = provider.getSigner(account.address)
-	return signer
-  }
-   
-  /** Hook to convert a viem Wallet Client to an ethers.js Signer. */
-  export function useEthersSigner({ chainId } = {}) {
-	const { data: walletClient } = useWalletClient({ chainId })
-	return React.useMemo(
-	  () => (walletClient ? walletClientToSigner(walletClient) : undefined),
-	  [walletClient],
-	)
-  }
 
 export default function SetUp() {
 	const navigate = useNavigate();

@@ -27,9 +27,9 @@ const deployerInterface = new ethers.utils.Interface(DeployerContract.abi);
 const deployCallData = deployerInterface.encodeFunctionData("performCreate", [0, SomeNft.bytecode.object])
 
 // Encode safe op
-const fallbackHandlerInterface = new ethers.utils.Interface(FallbackHandler.abi);
+const userOpCallData = new ethers.utils.Interface(FallbackHandler.abi);
 // const userOpCallData = fallbackHandlerInterface.encodeFunctionData("execTransaction", [AddressZero, 0, "0x"]);
-const userOpCallData = fallbackHandlerInterface.encodeFunctionData("execTransaction", [deployerAddress, 0, deployCallData]);
+// const userOpCallData = fallbackHandlerInterface.encodeFunctionData("execTransaction", [deployerAddress, 0, deployCallData]);
 
 // Prepare and send the transaction
 const tx = {

@@ -87,7 +87,7 @@ export default function Overview() {
 					<div className="flex flex-row justify-between w-full mt-[2.5rem]">
 						<div>
 							<h2 className="font-bold text-[26px]">{teamName}</h2>
-							<h3 className="font-semibold text-[#777777] text-[15px]">Team members ({owners.length})</h3>
+							<h3 className="font-semibold text-[#777777] text-[15px]">Team members ({owners?.length})</h3>
 							<h3 className="font-semibold text-[#777777] text-[15px]">Contracts deployed (0)</h3>
 						</div>
 						<div className="flex flex-col space-y-1 w-[205px]">

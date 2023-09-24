@@ -25,6 +25,7 @@ const ENTRY_POINT_ADDRESS = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
 export default function Overview() {
 	const [uploaded, setUploaded] = useState(false)
 	const [bytecode, setBytecode] = useState(null)
+	const [opHash, setOpHash] = useState(null)
 
 	const [balance, setBalance] = useState(0)
 	const [toggleAddFunds, setToggleAddFunds] = useState(false)
@@ -38,7 +39,7 @@ export default function Overview() {
 	// read safe balance
 	const balanceFetched = useBalance({ address: safeAddress })
 	useEffect(() => {
-		if (balanceFetched) {
+		if (balanceFetched && !!balanceFetched.data) {
 			setBalance(parseFloat(balanceFetched.data.formatted).toFixed(3))
 		}
 	}, [balanceFetched])
@@ -107,6 +108,7 @@ export default function Overview() {
 		])
 		
 		console.log("UserOperation hash:", userOperationHash)
+		setOpHash(userOpHash)
 	}
 
 
@@ -137,11 +139,11 @@ export default function Overview() {
 		}
 	}
 
-	const { config, error, isError } = usePrepareContractWrite({
+	const { config, error, isError, isLoading: isPreparing } = usePrepareContractWrite({
 		abi: CreateCall.abi,
 		enabled: !!bytecode,
 		functionName: 'performCreate',
-		address: '0x4452E69CfFb10F8f851FE71bfa447b44BCdB8a64',
+		address: import.meta.env.VITE_CONTRACT_DEPLOYER_MUMBAI,
 		args: [0, bytecode],
 	})
 
@@ -214,7 +216,7 @@ export default function Overview() {
 									<input
 										type="number"
 										className="font-semibold text-[#777777] text-[15px] bg-[#E5E6EC] border-[#777777] border-[1px] rounded-xl py-2 px-2 w-[60%]"
-										onChange={(event) => setAmountToAdd(parseFloat(event.target.value) * 1e18)}
+										onChange={(event) => setAmountToAdd(BigInt(parseFloat(event.target.value) * 1e18))}
 									/>
 									<button
 										onClick={() => sendAddToSafe()}
@@ -231,7 +233,9 @@ export default function Overview() {
 					{writeSuccess ? 
 					<div className="flex flex-col items-center space-y-[3.75rem]">
 						<p className="text-2xl">Contract deployed!</p>
-						<p>Transaction: <a href={`https://mumbai.polygonscan.com/tx/${data?.hash}`} target="_blank" rel="noreferrer">{data?.hash}</a></p>
+						
+						<p>User operation: <a href={`https://www.jiffyscan.xyz/userOpHash/${opHash}?network=mumbai`} target="_blank" rel="noreferrer">{opHash}</a></p>
+						<p>Deployed address: <a href={`https://mumbai.polygonscan.com/tx/${data?.hash}`} target="_blank" rel="noreferrer">{data?.hash}</a></p>
 					</div> : 
 					
 					<div className="flex flex-col items-center space-y-[3.75rem]">
@@ -255,7 +259,7 @@ export default function Overview() {
 								className="flex flex-row items-center rounded-xl font-semibold bg-[#3574f4] text-[14px] text-white drop-shadow-lg px-[23px] py-[8px] disabled:opacity-60"
 								onClick={deploy}
 							>
-								Deploy
+								{isPreparing || !write ? "Loading..." : "Deploy"}
 								<ArrowRightIcon className="h-6" />
 							</button>
 						</div>

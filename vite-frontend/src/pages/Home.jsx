@@ -4,9 +4,10 @@ import ConnectButton from "../components/ConnectButton";
 
 export default function Home() {
   return (
-    <main className="font-inter flex min-h-screen flex-col p-24 justify-start">
+    <main className="flex flex-col justify-center h-screen">
       {/* <div className="flex justify-between w-full mb-6"> */}
       {/* <div className="text-4xl font-extrabold">Team Name</div> */}
+      <div></div>
       <Header />
       {/* </div> */}
       <div className="z-10 w-full text-sm flex flex-col items-center justify-center flex-grow">
@@ -22,6 +23,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-center justify-center mt-3">
           <ConnectButton />
+          <div> </div>
         </div>
       </div>
     </main>

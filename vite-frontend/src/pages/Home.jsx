@@ -12,11 +12,11 @@ export default function Home() {
       {/* </div> */}
       <div className="z-10 w-full text-sm flex flex-col items-center  flex-grow">
         <div className="flex flex-col items-start mt-[150px]">
-          <h1 className="font-bold text-[40px] leading-relaxed">
+          <div className="text-4xl font-bold">
             Automatically deploy your Smart Contracts.
             <br />
             Gasless. Safe.
-          </h1>
+          </div>
           <div className="text-[#777777] text-[20px]">
             And you don’t have to worry about private keys
           </div>

@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import * as _ from "lodash"
 import { useNavigate } from "react-router-dom";
 import { useEthersSigner } from "../../hooks/useEthersSIgner";
+import Safe from '@safe-global/protocol-kit/dist/src/Safe.js'
 
 // 1.4.1 or 1.3.0
 const SAFE_VERSION = '1.4.1'
@@ -21,6 +22,7 @@ export default function SetUp() {
 	const navigate = useNavigate();
 	const [projectName, setProjectName] = useState("")
 	const [safeAddress, setSafeAddress] = useState("")
+	const [ethAdapter, setEthAdapter] = useState()
 	const { address: adminAddress } = useAccount()
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const signer = useEthersSigner()
@@ -35,11 +37,12 @@ export default function SetUp() {
 			setIsSubmitting(true)
 			// const provider = new ethers.providers.JsonRpcProvider(import.meta.env.VITE_RPC_URL)
 			// const deployerSigner = new ethers.Wallet(import.meta.env.VITE_DEPLOYER_ADDRESS_PRIVATE_KEY, provider)
-			const ethAdapter = new EthersAdapter({
+			const _ethAdapter = new EthersAdapter({
 				ethers: ethers,
 				signerOrProvider: signer
 			})
-			const safeFactory = await SafeFactory.create({ ethAdapter, safeVersion: SAFE_VERSION })
+			setEthAdapter(_ethAdapter)
+			const safeFactory = await SafeFactory.create({ ethAdapter: _ethAdapter, safeVersion: SAFE_VERSION })
 			const safeAccountConfig  = {
 				owners: [adminAddress],
 				threshold: 1,  
@@ -56,15 +59,47 @@ export default function SetUp() {
 			const addr = await safe.getAddress()
 			setSafeAddress(addr)
 			console.log('Deployed Safe:', addr)
-			const slug = _.kebabCase(projectName);
-			const redirectTo = `/team/${addr}/${slug}`
-			console.log("Redirecting to " + redirectTo)
-			navigate(redirectTo);
 		}
+	}
+
+	const setupSafe = async () => {
+		// Create SafeFactory instance
+		const safeSdk = await Safe.create({ethAdapter, safeAddress: safeAddress})
+		const handlerAddress = import.meta.env.VITE_HANDLER_ADDRESS
+		const safeTransaction = await safeSdk.createEnableFallbackHandlerTx(handlerAddress)
+		const txResponse = await safeSdk.executeTransaction(safeTransaction)
+		console.log("Executed default handler transaction")
+		console.log(txResponse)
+
+		const resp = await txResponse.transactionResponse?.wait()
+		console.log("Parsed default handler response")
+		console.log(resp)
+
+		const moduleTx = await safeSdk.createEnableModuleTx(handlerAddress)
+		const txResponse2 = await safeSdk.executeTransaction(moduleTx)
+		console.log("Executed add module transaction")
+		console.log(txResponse2)
+
+		const resp2 = await txResponse2.transactionResponse?.wait()
+		console.log("Parsed add module response")
+		console.log(resp2)
+
+		// Redirect
+		const slug = _.kebabCase(projectName);
+		const redirectTo = `/team/${safeAddress}/${slug}`
+		console.log("Redirecting to " + redirectTo)
+		navigate(redirectTo);
 	}
 
 	return <div className="text-black">
 			<Header />
+			{safeAddress.length > 0 ? <div className="flex mx-[20%] py-[4rem] ">
+				<div className="justify-between flex flex-col w-full">
+					<p className="text-3xl font-bold mb-7">Configure project for account abstraction</p>
+					<button className="p-3 rounded-lg bg-cyan-700" onClick={setupSafe}>Configure</button>
+				</div>
+			</div> : 
+			
 			<div className="flex mx-[20%] py-[4rem] ">
 				<div className="justify-between flex flex-col w-full">
 				<p className="text-3xl font-bold mb-7">Give your project a name</p>
@@ -85,6 +120,6 @@ export default function SetUp() {
 					</div>
 				</form>
 			</div>
-		</div>
+		</div>}
 	</div>
 }

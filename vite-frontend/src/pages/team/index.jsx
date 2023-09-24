@@ -38,7 +38,9 @@ export default function Overview() {
 	// read safe balance
 	const balanceFetched = useBalance({ address: safeAddress })
 	useEffect(() => {
-		setBalance(parseFloat(balanceFetched.data.formatted).toFixed(3))
+		if (balanceFetched) {
+			setBalance(parseFloat(balanceFetched.data.formatted).toFixed(3))
+		}
 	}, [balanceFetched])
 
 	const owners = useGetOwnersOfSafe(safeAddress)

@@ -2,7 +2,6 @@ import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react"
 import { WagmiConfig } from "wagmi"
 import { polygonMumbai } from "wagmi/chains"
 import { Routes, Route } from "react-router-dom"
-
 import Home from "./pages/Home"
 import TeamOverview from "./pages/team/"
 import TeamMembers from "./pages/team/members"

@@ -1,6 +1,6 @@
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react"
 import { WagmiConfig } from "wagmi"
-import { arbitrum, mainnet } from "wagmi/chains"
+import { polygonMumbai } from "wagmi/chains"
 import { Routes, Route } from "react-router-dom"
 
 import Home from "./pages/Home"
@@ -13,7 +13,7 @@ import SetUp from "./pages/set-up"
 const projectId = "dfe74e8562f98b471672c642ff618ef4"
 
 // 2. Create wagmiConfig
-const chains = [mainnet, arbitrum]
+const chains = [polygonMumbai]
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, appName: "Web3Modal" })
 
 // 3. Create modal

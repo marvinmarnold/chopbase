@@ -1,6 +1,5 @@
 import Header from "../../components/Header"
 import { useState, useEffect } from "react"
-import { useAccount } from "wagmi"
 import {
 	PlusIcon,
 	MinusIcon,
@@ -9,24 +8,34 @@ import {
 	CheckIcon,
 } from "@heroicons/react/24/outline"
 import { Link, useLocation } from "react-router-dom"
+import { useBalance, useSendTransaction } from "wagmi"
+import useGetOwnersOfSafe from "../../hooks/useGetOwnersOfSafe"
 
 export default function Overview() {
-	const [toggleAddFunds, setToggleAddFunds] = useState(false)
 	const [uploaded, setUploaded] = useState(false)
 	const [abi, setAbi] = useState(null)
-	abi
 
-	const account = useAccount()
-	console.log(account?.address)
+	const [balance, setBalance] = useState(0)
+	const [toggleAddFunds, setToggleAddFunds] = useState(false)
+	const [amountToAdd, setAmountToAdd] = useState(0)
 
 	// get address + team name from URL
 	const pageLocation = useLocation()
 	const safeAddress = pageLocation.pathname.split("/")[2]
 	const teamName = pageLocation.pathname.split("/")[3]
-	console.log(safeAddress)
 
-	// get contracts deployed (maybe count event emitted for every execution)
 	// read safe balance
+	const balanceFetched = useBalance({ address: safeAddress })
+	useEffect(() => {
+		setBalance(parseFloat(balanceFetched.data.formatted).toFixed(3))
+	}, [balanceFetched])
+
+	const owners = useGetOwnersOfSafe(safeAddress)
+
+	const { sendTransaction: sendAddToSafe } = useSendTransaction({
+		to: safeAddress,
+		value: amountToAdd,
+	})
 
 	useEffect(() => {
 		if (!abi) return
@@ -47,11 +56,6 @@ export default function Overview() {
 		} else {
 			alert("Please upload a valid JSON file.")
 		}
-	}
-
-	// submit new deposit to safe
-	const handleNewDeposit = () => {
-		// TODO: implement
 	}
 
 	return (
@@ -83,12 +87,12 @@ export default function Overview() {
 					<div className="flex flex-row justify-between w-full mt-[2.5rem]">
 						<div>
 							<h2 className="font-bold text-[26px]">{teamName}</h2>
-							<h3 className="font-semibold text-[#777777] text-[15px]">Team members (0)</h3>
+							<h3 className="font-semibold text-[#777777] text-[15px]">Team members ({owners.length})</h3>
 							<h3 className="font-semibold text-[#777777] text-[15px]">Contracts deployed (0)</h3>
 						</div>
 						<div className="flex flex-col space-y-1 w-[205px]">
 							<div className="flex flex-row space-x-4">
-								<div className="font-bold text-[26px]">$5.43</div>
+								<div className="font-bold text-[26px]">{balance}</div>
 								<div className="mt-1">
 									{/* BUTTON */}
 									<button
@@ -105,10 +109,11 @@ export default function Overview() {
 								<div className="flex flex-row space-x-1">
 									<input
 										type="number"
-										className="font-semibold text-[#777777] text-[15px] bg-[#E5E6EC] border-[#777777] border-2 rounded-xl py-2 px-2 w-[60%]"
+										className="font-semibold text-[#777777] text-[15px] bg-[#E5E6EC] border-[#777777] border-[1px] rounded-xl py-2 px-2 w-[60%]"
+										onChange={(event) => setAmountToAdd(parseFloat(event.target.value) * 1e18)}
 									/>
 									<button
-										onClick={handleNewDeposit}
+										onClick={() => sendAddToSafe()}
 										className="flex flex-row items-center rounded-xl font-semibold bg-[#3574f4] text-[14px] text-white drop-shadow-lg px-[23px] py-[8px]"
 									>
 										<CheckIcon className="h-6" />

@@ -1,1 +1,1 @@
-export const COMPANY_NAME = "ChopBase"
+export const COMPANY_NAME = "WeDeploy"

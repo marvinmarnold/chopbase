@@ -5,6 +5,8 @@ import { Routes, Route } from "react-router-dom"
 
 import Home from "./pages/Home"
 import TeamOverview from "./pages/team/"
+import TeamMembers from "./pages/team/members"
+import TeamContracts from "./pages/team/contracts"
 import SetUp from "./pages/set-up"
 
 // 1. Get projectId
@@ -23,7 +25,9 @@ export default function App() {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/set-up" element={<SetUp />} />
-				<Route path="/team/:address" element={<TeamOverview />} />
+				<Route path="/team/:address/:name" element={<TeamOverview />} />
+				<Route path="/team/:address/:name/members" element={<TeamMembers />} />
+				<Route path="/team/:address/:name/contracts" element={<TeamContracts />} />
 			</Routes>
 			{/* <Home /> */}
 		</WagmiConfig>

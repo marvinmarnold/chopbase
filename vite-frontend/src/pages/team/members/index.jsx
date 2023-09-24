@@ -1,52 +1,41 @@
-import Header from "../../components/Header"
-import { useState, useEffect } from "react"
+import Header from "../../../components/Header"
+import { useState } from "react"
 import { useAccount } from "wagmi"
-import {
-	PlusIcon,
-	MinusIcon,
-	ArrowRightIcon,
-	DocumentArrowUpIcon,
-	CheckIcon,
-} from "@heroicons/react/24/outline"
+import { PlusIcon, UserIcon, CheckIcon, MinusIcon } from "@heroicons/react/24/outline"
 import { Link, useLocation } from "react-router-dom"
 
 export default function Overview() {
 	const [toggleAddFunds, setToggleAddFunds] = useState(false)
-	const [uploaded, setUploaded] = useState(false)
-	const [abi, setAbi] = useState(null)
-	abi
-
 	const account = useAccount()
 	console.log(account?.address)
 
-	// get address + team name from URL
+	// get safe address + team name from URL
 	const pageLocation = useLocation()
 	const safeAddress = pageLocation.pathname.split("/")[2]
 	const teamName = pageLocation.pathname.split("/")[3]
-	console.log(safeAddress)
+	const overviewLink = `/team/${safeAddress}/${teamName}`
+	const contractsLink = `/team/${safeAddress}/${teamName}/contracts`
 
 	// get contracts deployed (maybe count event emitted for every execution)
 	// read safe balance
+	// read members from safe
 
-	useEffect(() => {
-		if (!abi) return
+	// TODO: delete
+	const users = [
+		{
+			address: "0x123124124...123",
+		},
+		{
+			address: "0x123124124...123",
+		},
+		{
+			address: "0x123124124...123",
+		},
+	]
 
-		// handle abi here (initiate deployment)
-	}, [abi])
-
-	const handleFileChange = (event) => {
-		const file = event.target.files[0]
-		if (file && file.type === "application/json") {
-			const reader = new FileReader()
-			reader.onload = (e) => {
-				const content = JSON.parse(e.target.result)
-				setAbi(content.abi)
-				setUploaded(true)
-			}
-			reader.readAsText(file)
-		} else {
-			alert("Please upload a valid JSON file.")
-		}
+	// submit new member to safe
+	const toggleAddNewMember = () => {
+		// TODO: implement
 	}
 
 	// submit new deposit to safe
@@ -60,26 +49,22 @@ export default function Overview() {
 			{/* MENU */}
 			<div className="flex w-full flex-col space-y-0">
 				<div className="flex flex-row mx-[20%] space-x-[4rem] font-medium">
+					<Link to={overviewLink}>
+						<button>Overview</button>
+					</Link>
 					<div>
-						<button className="underline underline-offset-[7px]">Overview</button>
+						<button className="underline underline-offset-[7px]">Members</button>
 					</div>
-					<div>
-						<Link to="members">
-							<button>Members</button>
-						</Link>
-					</div>
-					<div>
-						<Link to="contracts">
-							<button>Contracts deployed</button>
-						</Link>
-					</div>
+					<Link to={contractsLink}>
+						<button>Contracts deployed</button>
+					</Link>
 				</div>
 				<div className="bg-[#CECFD6] h-[1px] w-full">&nbsp; </div>
 			</div>
 			{/* MAIN content */}
 			<div className="flex w-full h-screen bg-[#E5E6EC]">
 				{/* STATS */}
-				<div className="flex flex-col space-y-16 mx-[20%] w-full">
+				<div className="flex flex-col space-y-32 mx-[20%] w-full">
 					<div className="flex flex-row justify-between w-full mt-[2.5rem]">
 						<div>
 							<h2 className="font-bold text-[26px]">{teamName}</h2>
@@ -118,29 +103,31 @@ export default function Overview() {
 						</div>
 					</div>
 
-					{/* DEPLOY CONTRACT MODULE */}
-					<div className="flex flex-col items-center space-y-[3.75rem]">
-						<div>
-							<h3 className="text-[#777777] font-medium text-lg">
-								Easily deploy a new contract from your team by uploading its code
-							</h3>
+					{/* ADD MEMBER MODULE */}
+					<div className="flex flex-col space-y-8">
+						<div className="flex flex-row items-center space-x-12">
+							<div>
+								<h2 className="font-semibold text-black text-[26px]">Team members (3)</h2>
+							</div>
+							<div>
+								<button
+									className="flex flex-row items-center rounded-xl font-semibold bg-[#3574f4] text-[10px] text-white drop-shadow-lg px-[23px] py-[8px]"
+									onClick={toggleAddNewMember}
+								>
+									<PlusIcon className="h-4" />
+									Add members
+								</button>
+							</div>
 						</div>
-						<input id="fileInput" type="file" accept=".json" onChange={handleFileChange} className="hidden" />
-						<label htmlFor="fileInput" className="rounded-lg border-[#000000] border-2 px-[5rem] py-[2rem]">
-							{uploaded ? (
-								<CheckIcon className="h-12 color-[#]" />
-							) : (
-								<DocumentArrowUpIcon className="h-12 color-[#]" />
-							)}
-						</label>
-						<div>
-							<button
-								disabled={!uploaded}
-								className="flex flex-row items-center rounded-xl font-semibold bg-[#3574f4] text-[14px] text-white drop-shadow-lg px-[23px] py-[8px] disabled:opacity-60"
-							>
-								Deploy
-								<ArrowRightIcon className="h-6" />
-							</button>
+						<div className="flex flex-col space-y-4">
+							{users.map((user, id) => (
+								<div key={id} className="text-[#777777] font-semibold flex flex-row items-center space-x-4">
+									<div>
+										<UserIcon className="h-6" />
+									</div>
+									<div>{user.address}</div>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>
